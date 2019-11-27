@@ -13,13 +13,19 @@ public class RunsScore {
 
        List<Integer> sortedAndParsed = values.stream().map(x -> comparator.getRunPlace(x)).collect(Collectors.toList());
 
-       int run = 0;
-       for(int i=0; i<sortedAndParsed.size()-1; i++) {
-           if(sortedAndParsed.get(i)+1 != sortedAndParsed.get(i+1)) {
-               continue;
-           } else run++;
-       }
+       int count = 0;
+       for (int i = 0; i < sortedAndParsed.size() - 1; i++) {
 
-        return run+1;
+           int j = i + 1;
+
+           while (sortedAndParsed.get(j) == sortedAndParsed.get(i)) {
+               j++;
+           }
+
+           if (sortedAndParsed.get(i) +1  != sortedAndParsed.get(j)) {
+               continue;
+           } else count++;
+       }
+       return count+1;
     }
 }

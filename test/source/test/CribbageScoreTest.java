@@ -21,7 +21,7 @@ public class CribbageScoreTest {
     }
 
     @Test
-    void TestRunFour() {
+    void testFourRun() {
         CribbageHand cribbageHand = new CribbageHand("6DJH4H7C5H");
         assertThat(cribbageHand.runsScore(), is(4));
     }
