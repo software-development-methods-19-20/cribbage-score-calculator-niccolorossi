@@ -1,29 +1,41 @@
 package dssc.cribbage;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RunsScore {
 
     public static int runsScore(List<String> values) {
 
-        ValuesComparator comparator = new ValuesComparator();
-        Collections.sort(values, comparator);
+       ValuesComparator comparator = new ValuesComparator();
+       Collections.sort(values, comparator);
 
-       List<Integer> sortedAndParsed = values.stream().map(x -> comparator.getRunPlace(x)).collect(Collectors.toList());
-       List<Integer> uniqueValuesList = sortedAndParsed.stream().distinct().collect(Collectors.toList());
+       List<Integer> sortedValues = values.stream().map(x -> comparator.getRunPlace(x)).collect(Collectors.toList());
 
-       int multiplier = (sortedAndParsed.size()-uniqueValuesList.size()) + 1;
+       List<Integer> uniqueValues = sortedValues.stream().distinct().collect(Collectors.toList());
 
-       int count = 0;
-       for (int i = 0; i < uniqueValuesList.size() - 1; i++) {
-           if (uniqueValuesList.get(i) +1  != uniqueValuesList.get(i+1)) {
-               continue;
-           } else count++;
+       List<Integer> repeatedNumbers = sortedValues.stream()
+               .filter(e -> Collections.frequency(sortedValues, e) > 1)
+               .distinct()
+               .collect(Collectors.toList());
+
+       int runsToCount = 1;
+       int difference = repeatedNumbers.size();
+       if(difference == 1) {
+           runsToCount = 2;
+       } else if (difference == 2 && repeatedNumbers.size() == 1) {
+           runsToCount = 3;
+       } else if (difference == 2 && repeatedNumbers.size() == 2) {
+           runsToCount = 4;
        }
-       if (count != 0) count += 1;
-       return count*multiplier;
+
+       int runSize = 0;
+       for (int i = 0; i < uniqueValues.size() - 1; i++) {
+           if (uniqueValues.get(i) +1  != uniqueValues.get(i+1)) {
+               continue;
+           } else runSize++;
+       }
+       if (runSize != 0) runSize += 1;
+       return runSize*runsToCount;
     }
 }

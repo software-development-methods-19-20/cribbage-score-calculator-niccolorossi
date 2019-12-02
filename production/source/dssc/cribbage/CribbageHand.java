@@ -4,42 +4,61 @@ import java.util.*;
 
 public class CribbageHand {
 
-    private String hand;
+    private List<String> valuesList;
+    private List<String> suitsList;
 
-    public CribbageHand(String hand) {
-        this.hand = hand;
-    }
-
-    private List<String> handToValues() {
+    private List<String> handToValues(String hand) {
         List<String> valuesList = new ArrayList<>();
         for(int i=0; i<10; i=i+2) {
-            valuesList.add(String.valueOf(this.hand.charAt(i)));
+            valuesList.add(String.valueOf(hand.charAt(i)));
         }
         return valuesList;
     }
 
-    private List<String> handToSuits() {
+    private List<String> handToSuits(String hand) {
         List<String> suitsList = new ArrayList<>();
         for(int i=1; i<10; i=i+2) {
-            suitsList.add(String.valueOf(this.hand.charAt(i)));
+            suitsList.add(String.valueOf(hand.charAt(i)));
         }
         return suitsList;
+    }
+
+    public CribbageHand(String hand) {
+        this.valuesList = handToValues(hand);
+        this.suitsList = handToSuits(hand);
     }
 
     private List<Integer> valuesToPoints(List<String> valuesList) {
         return ValuesToPoints.convertValuesToPoints(valuesList);
     }
 
-
     public int fifteenTwos() {
-        List<String> valuesList = handToValues();
-        List<Integer> pointsList = valuesToPoints(valuesList);
+        List<Integer> pointsList = valuesToPoints(this.valuesList);
         return CountFifteens.fifteensTwoScore(pointsList);
     }
 
     public int runsScore() {
-        List<String> valuesList = handToValues();
+        return RunsScore.runsScore(this.valuesList);
+    }
 
-        return RunsScore.runsScore(valuesList);
+    public int pairsScore() {
+        return PairsScore.pairsScore(this.valuesList);
+    }
+
+    public int flushScore() {
+        return FlushScore.flushScore(this.suitsList);
+    }
+
+    public int jackScore() {
+        return JackScore.jackScore(this.valuesList, this.suitsList);
+    }
+
+    public int score() {
+        List<Integer> pointsList = valuesToPoints(this.valuesList);
+        return CountFifteens.fifteensTwoScore(pointsList) +
+                RunsScore.runsScore(this.valuesList) +
+                PairsScore.pairsScore(this.valuesList) +
+                FlushScore.flushScore(this.suitsList) +
+                JackScore.jackScore(this.valuesList, this.suitsList);
     }
 }
